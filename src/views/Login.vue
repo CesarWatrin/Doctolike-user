@@ -65,7 +65,7 @@ const onLogin = async () => {
           type="button"
           @click="onLogin"
         >
-          Sign In
+          Login
         </button>
       </div>
     </form>

@@ -1,11 +1,13 @@
 <script setup>
 import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { ref } from "vue";
-import { auth } from "../firebase/config";
+import { auth, db } from "../firebase/config";
 
 const email = ref(null);
 const password = ref(null);
 const hasError = ref(false);
+const newUser = ref(null);
 
 const onRegister = async () => {
   try {
@@ -15,8 +17,11 @@ const onRegister = async () => {
       password.value
     );
     if (r.user) {
-      console.log(r.user);
+      newUser.value = r.user.uid;
       window.navigator.vibrate(200);
+      const result = await setDoc(doc(db, "client", newUser.value), {
+        first_name: "Karim",
+      });
     }
   } catch (e) {
     window.navigator.vibrate(2000);
@@ -67,7 +72,7 @@ const onRegister = async () => {
           type="button"
           @click="onRegister"
         >
-          Sign up
+          Register
         </button>
       </div>
     </form>
