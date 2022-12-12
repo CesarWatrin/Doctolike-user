@@ -24,7 +24,7 @@ const onRegister = async () => {
     if (r.user) {
       newUser.value = r.user.uid;
       window.navigator.vibrate(200);
-      await setDoc(doc(db, "client", newUser.value), {
+      await setDoc(doc(db, "users", newUser.value), {
         first_name: firstName.value,
         last_name: lastName.value,
         address: address.value,
