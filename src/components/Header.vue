@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink, useRoute } from "vue-router";
 import {
   Disclosure,
   DisclosureButton,
@@ -10,11 +11,18 @@ import {
 } from "@headlessui/vue";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "../store/auth";
+import { ref } from "vue";
 
-const navigation = [
-  { name: "Doctors", href: "/", current: true },
-  { name: "My appointments", href: "#", current: false },
-];
+const route = useRoute();
+
+const navigation = ref([
+  { name: "Doctors", href: "/", current: false },
+  {
+    name: "My appointments",
+    href: "/appointments",
+    current: false,
+  },
+]);
 
 const authStore = useAuthStore();
 
@@ -54,10 +62,10 @@ const logout = () => {
           </div>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <a
+              <RouterLink
                 v-for="item in navigation"
                 :key="item.name"
-                :href="item.href"
+                :to="item.href"
                 :class="[
                   item.current
                     ? 'bg-gray-900 text-white'
@@ -65,7 +73,7 @@ const logout = () => {
                   'px-3 py-2 rounded-md text-sm font-medium',
                 ]"
                 :aria-current="item.current ? 'page' : undefined"
-                >{{ item.name }}</a
+                >{{ item.name }}</RouterLink
               >
             </div>
           </div>

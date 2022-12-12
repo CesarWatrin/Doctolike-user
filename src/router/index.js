@@ -24,7 +24,7 @@ const router = createRouter({
       component: DoctorsView,
     },
     {
-      path: "/my-appointments",
+      path: "/appointments",
       name: "appointment",
       component: AppointmentsView,
     },
