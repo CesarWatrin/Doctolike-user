@@ -16,6 +16,7 @@ const onLogin = async () => {
     );
     if (r.user) {
       window.navigator.vibrate(200);
+      console.log("log in");
     }
   } catch (e) {
     window.navigator.vibrate(2000);

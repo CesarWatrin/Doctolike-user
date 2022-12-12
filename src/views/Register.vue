@@ -4,8 +4,13 @@ import { doc, setDoc } from "firebase/firestore";
 import { ref } from "vue";
 import { auth, db } from "../firebase/config";
 
+const firstName = ref(null);
+const lastName = ref(null);
 const email = ref(null);
 const password = ref(null);
+const address = ref(null);
+const zipcode = ref(null);
+const town = ref(null);
 const hasError = ref(false);
 const newUser = ref(null);
 
@@ -19,8 +24,12 @@ const onRegister = async () => {
     if (r.user) {
       newUser.value = r.user.uid;
       window.navigator.vibrate(200);
-      const result = await setDoc(doc(db, "client", newUser.value), {
-        first_name: "",
+      await setDoc(doc(db, "client", newUser.value), {
+        first_name: firstName.value,
+        last_name: lastName.value,
+        address: address.value,
+        zipcode: zipcode.value,
+        town: address.value,
       });
     }
   } catch (e) {
@@ -145,6 +154,9 @@ const onRegister = async () => {
             placeholder="town"
           />
         </div>
+        <p v-if="hasError" class="text-red-500 text-xs italic pt-2">
+          An error as occurred.
+        </p>
       </div>
     </form>
   </div>
