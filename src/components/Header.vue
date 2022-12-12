@@ -13,7 +13,7 @@ import { useRoute } from "vue-router";
 
 const navigation = [
   { name: "Doctors", href: "/", current: true },
-  { name: "Appointment", href: "#", current: false },
+  { name: "My appointments", href: "#", current: false },
 ];
 
 const route = useRoute();

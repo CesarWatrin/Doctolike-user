@@ -8,6 +8,8 @@ import InputText from "primevue/inputtext";
 import { FilterMatchMode } from "primevue/api";
 import Button from "primevue/button";
 import Sidebar from "primevue/sidebar";
+import Textarea from "primevue/textarea";
+import Calendar from "primevue/calendar";
 
 const doctors = ref([]);
 
@@ -31,10 +33,16 @@ const filters = ref({
 });
 
 const sidebarOpen = ref(false);
+const selectedDoctor = ref(null);
+const reason = ref("");
+const date = ref(new Date(Date.now()));
 
-const takeAppointment = () => {
+const takeAppointment = (doctor) => {
   sidebarOpen.value = true;
+  selectedDoctor.value = doctor;
 };
+
+const submitAppointment = () => {};
 </script>
 
 <template>
@@ -72,13 +80,13 @@ const takeAppointment = () => {
         <Column field="first_name" :sortable="true" header="First name" />
         <Column field="last_name" :sortable="true" header="Last name" />
         <Column header="Action" header-style="width: 17rem">
-          <template #body>
+          <template #body="{ data }">
             <Button
               label="Take an appointment"
               class="p-button-outlined"
               icon="pi pi-calendar"
               icon-pos="left"
-              @click="takeAppointment"
+              @click="takeAppointment(data)"
             />
           </template>
         </Column>
@@ -88,7 +96,31 @@ const takeAppointment = () => {
         class="p-sidebar-md h-100"
         position="right"
       >
-        <div></div>
+        <div>
+          <div class="flex items-end justify-center p-4">
+            <h2 class="font-bold text-xl">Appointment</h2>
+            <span class="ml-4">
+              Dr.
+              {{ selectedDoctor.first_name + " " + selectedDoctor.last_name }}
+            </span>
+          </div>
+          <div class="p-2">
+            <span class="w-full p-float-label my-6">
+              <Textarea
+                class="w-full"
+                v-model="reason"
+                :autoResize="true"
+                rows="5"
+                cols="30"
+              />
+              <label for="reason">Reason</label>
+            </span>
+            <Calendar class="w-full" v-model="date" :showTime="true" />
+            <div class="my-6">
+              <Button label="Submit" @click="submitAppointment" />
+            </div>
+          </div>
+        </div>
       </Sidebar>
     </div>
   </div>
