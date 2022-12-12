@@ -1,8 +1,7 @@
 <script setup>
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 import { ref } from "vue";
-import { auth, db } from "../firebase/config";
+import { useAuthStore } from "../store/auth";
+import { useRouter } from "vue-router";
 
 const firstName = ref(null);
 const lastName = ref(null);
@@ -12,30 +11,24 @@ const address = ref(null);
 const zipcode = ref(null);
 const town = ref(null);
 const hasError = ref(false);
-const newUser = ref(null);
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const onRegister = async () => {
-  try {
-    const r = await createUserWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    );
-    if (r.user) {
-      newUser.value = r.user.uid;
-      window.navigator.vibrate(200);
-      await setDoc(doc(db, "users", newUser.value), {
-        first_name: firstName.value,
-        last_name: lastName.value,
-        address: address.value,
-        zipcode: zipcode.value,
-        town: address.value,
-      });
-    }
-  } catch (e) {
-    window.navigator.vibrate(2000);
+  const response = await authStore.register(
+    email.value,
+    password.value,
+    firstName.value,
+    lastName.value,
+    address.value,
+    zipcode.value,
+    town.value
+  );
+  if (response) {
+    await router.push({ name: "doctor" });
+  } else {
     hasError.value = true;
-    console.log(e);
   }
 };
 </script>
@@ -158,7 +151,7 @@ const onRegister = async () => {
           />
         </div>
         <p v-if="hasError" class="text-red-500 text-xs italic pt-2">
-          An error as occurred.
+          An error as occurred. Try again.
         </p>
       </div>
     </form>

@@ -1,6 +1,11 @@
 import { defineStore } from "pinia";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { auth } from "../firebase/config";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from "firebase/auth";
+import { auth, db } from "../firebase/config";
+import { doc, setDoc } from "firebase/firestore";
 
 export const useAuthStore = defineStore({
   id: "auth",
@@ -24,7 +29,36 @@ export const useAuthStore = defineStore({
         return false;
       }
     },
-    async register() {},
+    async register(
+      email,
+      password,
+      firstName,
+      lastName,
+      address,
+      zipcode,
+      town
+    ) {
+      try {
+        const r = await createUserWithEmailAndPassword(auth, email, password);
+        if (r.user) {
+          window.navigator.vibrate(200);
+          this.user = r.user.uid;
+          localStorage.setItem("user", r.user.uid);
+          await setDoc(doc(db, "users", r.user.uid), {
+            first_name: firstName,
+            last_name: lastName,
+            address: address,
+            zipcode: zipcode,
+            town: town,
+          });
+          return true;
+        }
+      } catch (e) {
+        window.navigator.vibrate(2000);
+        console.log(e);
+        return false;
+      }
+    },
     async logout() {
       signOut(auth)
         .then(() => {
