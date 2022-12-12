@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import { onMounted, ref } from "vue";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../firebase/config";
@@ -7,6 +7,7 @@ import Column from "primevue/column";
 import InputText from "primevue/inputtext";
 import { FilterMatchMode } from "primevue/api";
 import Button from "primevue/button";
+import Sidebar from "primevue/sidebar";
 
 const doctors = ref([]);
 
@@ -28,6 +29,12 @@ onMounted(() => {
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
 });
+
+const sidebarOpen = ref(false);
+
+const takeAppointment = () => {
+  sidebarOpen.value = true;
+};
 </script>
 
 <template>
@@ -71,10 +78,18 @@ const filters = ref({
               class="p-button-outlined"
               icon="pi pi-calendar"
               icon-pos="left"
+              @click="takeAppointment"
             />
           </template>
         </Column>
       </DataTable>
+      <Sidebar
+        v-model:visible="sidebarOpen"
+        class="p-sidebar-md h-100"
+        position="right"
+      >
+        <div></div>
+      </Sidebar>
     </div>
   </div>
 </template>
