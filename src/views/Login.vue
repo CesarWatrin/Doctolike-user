@@ -1,25 +1,21 @@
 <script setup>
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { ref } from "vue";
-import { auth } from "../firebase/config";
+import { useAuthStore } from "../store/auth";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+
+const authStore = useAuthStore();
 
 const email = ref(null);
 const password = ref(null);
 const hasError = ref(false);
 
 const onLogin = async () => {
-  try {
-    const r = await signInWithEmailAndPassword(
-      auth,
-      email.value,
-      password.value
-    );
-    if (r.user) {
-      window.navigator.vibrate(200);
-      console.log("log in");
-    }
-  } catch (e) {
-    window.navigator.vibrate(2000);
+  const response = await authStore.login(email.value, password.value);
+  if (response) {
+    await router.push({ name: "doctor" });
+  } else {
     hasError.value = true;
   }
 };
@@ -68,6 +64,9 @@ const onLogin = async () => {
         >
           Login
         </button>
+        <RouterLink class="text-blue-500 hover:text-blue-700" to="register">
+          register
+        </RouterLink>
       </div>
     </form>
   </div>

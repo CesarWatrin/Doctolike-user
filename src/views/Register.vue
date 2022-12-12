@@ -109,6 +109,9 @@ const onRegister = async () => {
           >
             Register
           </button>
+          <RouterLink class="text-blue-500 hover:text-blue-700" to="login">
+            log in
+          </RouterLink>
         </div>
       </div>
       <div class="ml-4">
