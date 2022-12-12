@@ -13,8 +13,6 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "../store/auth";
 import { ref } from "vue";
 
-const route = useRoute();
-
 const navigation = ref([
   { name: "Doctors", href: "/", current: false },
   {
@@ -32,7 +30,12 @@ const logout = () => {
 </script>
 
 <template>
-  <Disclosure as="nav" class="bg-gray-800" v-slot="{ open }">
+  <Disclosure
+    style="z-index: 10000"
+    as="nav"
+    class="bg-gray-800"
+    v-slot="{ open }"
+  >
     <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
