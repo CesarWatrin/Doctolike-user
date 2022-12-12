@@ -44,7 +44,7 @@ const takeAppointment = (doctor) => {
 };
 
 const messages = ref([]);
-const messageLife = ref(4000);
+const messageLife = ref(1000);
 const messageId = ref(0);
 const addMessages = () => {
   messages.value = [
@@ -61,17 +61,19 @@ const addMessages = () => {
 };
 
 const submitAppointment = async () => {
-  try {
-    await addDoc(collection(db, "appointments"), {
-      user: localStorage.getItem("user"),
-      client: selectedDoctor.value.id,
-      reason: reason.value,
-      date: date.value,
-    }).then(() => {
-      addMessages();
-    });
-  } catch (e) {
-    console.log(e);
+  if (reason.value !== "") {
+    try {
+      await addDoc(collection(db, "appointments"), {
+        user: localStorage.getItem("user"),
+        client: selectedDoctor.value.id,
+        reason: reason.value,
+        date: date.value,
+      }).then(() => {
+        addMessages();
+      });
+    } catch (e) {
+      console.log(e);
+    }
   }
 };
 </script>
@@ -128,7 +130,7 @@ const submitAppointment = async () => {
         position="right"
       >
         <template #header>
-          <div class="absolute left-4 top-0">
+          <div class="absolute left-4 bottom-0">
             <transition-group name="p-message" tag="div">
               <Message
                 v-for="msg of messages"
