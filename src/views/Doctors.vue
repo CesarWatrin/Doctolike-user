@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue";
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot, addDoc } from "firebase/firestore";
 import { db } from "../firebase/config";
 import DataTable from "primevue/datatable";
 import Column from "primevue/column";
@@ -10,6 +10,7 @@ import Button from "primevue/button";
 import Sidebar from "primevue/sidebar";
 import Textarea from "primevue/textarea";
 import Calendar from "primevue/calendar";
+import Message from "primevue/message";
 
 const doctors = ref([]);
 
@@ -42,7 +43,37 @@ const takeAppointment = (doctor) => {
   selectedDoctor.value = doctor;
 };
 
-const submitAppointment = () => {};
+const messages = ref([]);
+const messageLife = ref(4000);
+const messageId = ref(0);
+const addMessages = () => {
+  messages.value = [
+    {
+      severity: "success",
+      content: "Appointment take",
+      id: messageId.value++,
+    },
+  ];
+  setTimeout(() => {
+    messages.value = [];
+    sidebarOpen.value = false;
+  }, messageLife.value + 500);
+};
+
+const submitAppointment = async () => {
+  try {
+    await addDoc(collection(db, "appointments"), {
+      user: localStorage.getItem("user"),
+      client: selectedDoctor.value.id,
+      reason: reason.value,
+      date: date.value,
+    }).then(() => {
+      addMessages();
+    });
+  } catch (e) {
+    console.log(e);
+  }
+};
 </script>
 
 <template>
@@ -96,6 +127,22 @@ const submitAppointment = () => {};
         class="p-sidebar-md h-100"
         position="right"
       >
+        <template #header>
+          <div class="absolute left-4 top-0">
+            <transition-group name="p-message" tag="div">
+              <Message
+                v-for="msg of messages"
+                :key="msg.id"
+                :life="messageLife"
+                :sticky="false"
+                :severity="msg.severity"
+                :closable="false"
+              >
+                {{ msg.content }}
+              </Message>
+            </transition-group>
+          </div>
+        </template>
         <div>
           <div class="flex items-end justify-center p-4">
             <h2 class="font-bold text-xl">Appointment</h2>

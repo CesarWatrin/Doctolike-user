@@ -10,7 +10,6 @@ import {
 } from "@headlessui/vue";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 import { useAuthStore } from "../store/auth";
-import { useRouter } from "vue-router";
 
 const navigation = [
   { name: "Doctors", href: "/", current: true },
@@ -18,11 +17,9 @@ const navigation = [
 ];
 
 const authStore = useAuthStore();
-const router = useRouter();
 
 const logout = () => {
   authStore.logout();
-  router.push({ name: "login" });
 };
 </script>
 

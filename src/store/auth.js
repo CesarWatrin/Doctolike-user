@@ -14,8 +14,8 @@ export const useAuthStore = defineStore({
         const r = await signInWithEmailAndPassword(auth, email, password);
         if (r.user) {
           window.navigator.vibrate(200);
-          this.user = r.user.accessToken;
-          localStorage.setItem("user", r.user.accessToken);
+          this.user = r.user.uid;
+          localStorage.setItem("user", r.user.uid);
           return true;
         }
       } catch (e) {
@@ -30,6 +30,7 @@ export const useAuthStore = defineStore({
         .then(() => {
           this.user = null;
           localStorage.removeItem("user");
+          this.router.push({ name: "login" });
         })
         .catch((e) => {
           console.log(e);
