@@ -1,13 +1,55 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import "@fullcalendar/core/vdom";
 import "@fullcalendar/core";
 import FullCalendar from "@fullcalendar/vue3";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { collection, onSnapshot } from "firebase/firestore";
+import { db } from "../firebase/config";
 
 const events = ref([]);
+
+onMounted(() => {
+  onSnapshot(collection(db, "appointments"), (querySnapshot) => {
+    const fbAppointments = [];
+    let index = 1;
+    querySnapshot.forEach((elem) => {
+      if (elem.data().user === localStorage.getItem("user")) {
+        const date = new Date(elem.data().date.seconds * 1000);
+        fbAppointments.push({
+          id: index,
+          title: elem.data().reason + " - Dr. " + elem.data().client_last_name,
+          start:
+            date.getFullYear() +
+            "-" +
+            (date.getMonth() + 1) +
+            "-" +
+            date.getDate() +
+            "T" +
+            date.getHours() +
+            ":" +
+            date.getMinutes() +
+            ":00",
+          end:
+            date.getFullYear() +
+            "-" +
+            (date.getMonth() + 1) +
+            "-" +
+            date.getDate() +
+            "T" +
+            (date.getHours() + 1) +
+            ":" +
+            date.getMinutes() +
+            ":00",
+        });
+      }
+      index++;
+    });
+    events.value = fbAppointments;
+  });
+});
 
 const calendarOptions = ref({
   plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -21,6 +63,7 @@ const calendarOptions = ref({
   selectable: true,
   selectMirror: true,
   dayMaxEvents: true,
+  events: events,
 });
 </script>
 
@@ -31,7 +74,7 @@ const calendarOptions = ref({
     </div>
     <div class="pb-8">
       <div>
-        <FullCalendar :events="events" :options="calendarOptions" />
+        <FullCalendar :options="calendarOptions" />
       </div>
     </div>
   </div>

@@ -66,6 +66,8 @@ const submitAppointment = async () => {
       await addDoc(collection(db, "appointments"), {
         user: localStorage.getItem("user"),
         client: selectedDoctor.value.id,
+        client_first_name: selectedDoctor.value.first_name,
+        client_last_name: selectedDoctor.value.last_name,
         reason: reason.value,
         date: date.value,
       }).then(() => {
