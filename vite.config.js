@@ -20,6 +20,10 @@ export default defineConfig({
         short_name: "Doctolike",
         description: "",
         theme_color: "#ffffff",
+        background_color: "#ffffff",
+        display: "fullscreen",
+        scope: "/",
+        start_url: "/",
         icons: [
           {
             src: "pwa-192x192.png",
