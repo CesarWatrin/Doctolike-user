@@ -1,6 +1,7 @@
 <script setup>
 import Header from "../components/Header.vue";
 import { useAuthStore } from "../store/auth";
+import Footer from "../components/Footer.vue";
 
 const userStore = useAuthStore();
 </script>
@@ -10,4 +11,5 @@ const userStore = useAuthStore();
   <div class="layout-container mt-16">
     <slot />
   </div>
+  <Footer v-if="userStore.getUser === null" />
 </template>
